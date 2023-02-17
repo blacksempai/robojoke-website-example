@@ -188,6 +188,7 @@ main {
         background: #1646FF;
         gap: 0.5rem;
         padding: 1rem 0.5rem 2rem;
+        border-radius: 0;
     }
 
     .header__title {
