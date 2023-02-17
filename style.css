@@ -207,17 +207,3 @@ main {
     }
 
 }
-
-
-
-
-main {
-    /* flex: 1; or other fixed height */
-    overflow: hidden;
-}
-
-.jokes_container {
-    overflow: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-}
