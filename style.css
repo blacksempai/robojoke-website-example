@@ -5,7 +5,8 @@
 }
 
 body {
-    height: 100vh;
+    height: 100%;
+    position:fixed;
     display: flex;
     flex-direction: column;
     padding: 1rem 10% 0;
@@ -188,12 +189,24 @@ main {
         padding: 1rem 0.5rem 2rem;
     }
 
+    .header__title {
+        font-size: 1.75rem;
+    }
+
     main {
         background: #FF7939;
+        padding: 0.5rem;
     }
 
     .jokes_container {
         grid-template-columns: 1fr;
+        padding: 0;
+        background: transparent;
+    }
+
+    .joke_form__btn {
+        font-size: 1rem;
+        padding: 0 0.5rem;
     }
 
 }
