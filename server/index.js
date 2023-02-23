@@ -5,17 +5,26 @@ const fs = require('fs');
 const dataPath = path.join(__dirname, 'data');
 
 const server = http.createServer((req, res)=> {
-    if(req.url == '/jokes' && req.method == 'GET') {
-        getAllJokes(req, res);
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        if(req.url == '/jokes' && req.method == 'GET') {
+            return getAllJokes(req, res);
+        }
+        if(req.url == '/jokes' && req.method == 'POST') {
+            return addJoke(req, res);
+        }
+        if(req.url.startsWith('/like')) {
+            return like(req, res);
+        }
+        if(req.url.startsWith('/dislike')) {
+            return dislike(req, res);
+        }
+        res.statusCode = 404;
+        return res.end('Error 404');
     }
-    if(req.url == '/jokes' && req.method == 'POST') {
-        addJoke(req, res);
-    }
-    if(req.url.startsWith('/like')) {
-        like(req, res);
-    }
-    if(req.url.startsWith('/dislike')) {
-        dislike(req, res);
+    catch(e) {
+        res.statusCode = 500;
+        return res.end('Error 500');
     }
 });
 server.listen(3000);
@@ -31,7 +40,7 @@ function getAllJokes(req, res) {
 
         allJokes.push(joke);
     }
-    res.end(JSON.stringify(allJokes));
+    return res.end(JSON.stringify(allJokes));
 }
 
 function addJoke(req, res) {
@@ -47,9 +56,11 @@ function addJoke(req, res) {
         let dir = fs.readdirSync(dataPath);
         let fileName = dir.length+'.json';
         let filePath = path.join(dataPath, fileName);
-        fs.writeFileSync(filePath, JSON.stringify(joke));
 
-        res.end();
+        
+        fs.writeFileSync(filePath, JSON.stringify(joke));
+        res.statusCode = '201';
+        return res.end(JSON.stringify(joke));
     });
 }
 
@@ -66,8 +77,13 @@ function like(req, res) {
         joke.likes++;
     
         fs.writeFileSync(filePath, JSON.stringify(joke));
+
+        joke.id = id;
+
+        return res.end(JSON.stringify(joke));
     }
-    res.end();
+    res.statusCode = '400';
+    return res.end('Bad request');
 }
 
 function dislike(req, res) {
@@ -82,6 +98,11 @@ function dislike(req, res) {
         joke.dislikes++;
     
         fs.writeFileSync(filePath, JSON.stringify(joke));
+
+        joke.id = id;
+
+        return res.end(JSON.stringify(joke));
     }
-    res.end();
+    res.statusCode = '400';
+    return res.end('Bad request');
 }
